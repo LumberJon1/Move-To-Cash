@@ -9,7 +9,7 @@ VMFFX_historical_data = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 iteration_results = []
 
 # Define variables like cash hold duration
-cash_out_duration = 0
+cash_out_duration = 3
 
 # Define beginning and ending date ranges in UNIX time and as array-iterable integers
 begin_unix = 1483228800
@@ -69,26 +69,26 @@ def portfolio_change(date_index):
 	# Compute the portfolio change by summing the individual asset percent changes
 	portfolio_chg = VTSAX_change + VTIAX_change + VBTLX_change + VTABX_change + VMFFX_change
 
-	print("\nPortfolio % change: "+str(round(portfolio_chg * 100, 2))+"%")
 	return portfolio_chg
 
 
-
-# Functions to assign cash-out and reinvestment dates
+# Functions to assign cash-out and reinvestment dates  
 def progress_excluded_dates(progression=1):
-	"""Takes each index of excluded_dates and increments by a progression factor, which defaults to 1"""
-	for date in excluded_dates:
-		date += progression 
+    print("excluded dates:", excluded_dates)
+    for date in range(len(excluded_dates)):
+        print("date:", date)
+        print("excluded_dates[date]:", excluded_dates[date])
+        print("Filling excluded_dates at index", date, " with ", date+progression)
+        excluded_dates[date] += progression
+        print("Excluded_dates[date] is now ", excluded_dates[date])
+    print("New excluded_dates: ", excluded_dates)
 	
 def evaluate_HPR(balance_array):
     HPR = (balance_array[-1] - balance_array[0]) / balance_array[0]
-    print("HPR:", HPR)
     return round(HPR, 4)
 
 # Main Function that will loop through each dataset and compute % change with excluded date ranges
 def iterate_return():
-    
-    print("Went into iterate_return function")
     
     balance = beginning_balance
     balance_array = []	
@@ -96,23 +96,19 @@ def iterate_return():
 	# Will need to take a beginning and ending date - for now using length of historical data arrays
     for day in range(len(VTSAX_historical_data)):
         
+        # TODO: Check that the set weights are working correctly
         # If the date is in the excluded dates range, switch the weights
         if (day in excluded_dates):
             set_cash_weights()
-            print("Setting weights to cash weights")
         else:
             set_base_weights()
-            print("Using base weights")
         
-        print("balance:", balance)
         # Run portfolio_change for each date, excluding date 0
         if (day != 0):
             day_change = portfolio_change(day)
-            print("day_change:", day_change)
             
             # Add or subtract that change from the prior day's balance
             balance = round(balance * (1 + day_change), 2)
-            print("New balance:", balance)
             
             # Assign the resulting balance to a balance_array
             balance_array.append(balance)
