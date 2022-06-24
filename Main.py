@@ -38,38 +38,29 @@ VMFFX_weight = 0.00
 # Define starting portfolio balance
 beginning_balance = 100000
 
-# Function that will switch portfolio weights to the cash-pullout base weights
-def set_cash_weights():
-	VTSAX_weight = 0.00
-	VTIAX_weight = 0.00
-	VBTLX_weight = 0.00
-	VTABX_weight = 0.00
-	VMFFX_weight = 1.00
-
-
-def set_base_weights():
-	VTSAX_weight = 0.36
-	VTIAX_weight = 0.24
-	VBTLX_weight = 0.28
-	VTABX_weight = 0.12
-	VMFFX_weight = 0.00
-
 
 # Function that will compute weighted portfolio change
-def portfolio_change(date_index):
+def portfolio_change(date_index, VTSAX_weight, VTIAX_weight, VBTLX_weight, VTABX_weight, VMFFX_weight):
 	# For each asset in the portfolio, compute the weighted change by subtracting the price at the current index - the price at the previous index
 	# from the corresponding historical data array and dividing by the prior day change, then multiplyingf by the weight
 
-	VTSAX_change = VTSAX_weight * ((VTSAX_historical_data[date_index] - VTSAX_historical_data[date_index - 1]) / VTSAX_historical_data[date_index - 1])
-	VTIAX_change = VTIAX_weight * ((VTIAX_historical_data[date_index] - VTIAX_historical_data[date_index - 1]) / VTIAX_historical_data[date_index - 1])
-	VBTLX_change = VBTLX_weight * ((VBTLX_historical_data[date_index] - VBTLX_historical_data[date_index - 1]) / VBTLX_historical_data[date_index - 1])
-	VTABX_change = VTABX_weight * ((VTABX_historical_data[date_index] - VTABX_historical_data[date_index - 1]) / VTABX_historical_data[date_index - 1])
-	VMFFX_change = VMFFX_weight * ((VMFFX_historical_data[date_index] - VMFFX_historical_data[date_index - 1]) / VMFFX_historical_data[date_index - 1])
 
-	# Compute the portfolio change by summing the individual asset percent changes
-	portfolio_chg = VTSAX_change + VTIAX_change + VBTLX_change + VTABX_change + VMFFX_change
-
-	return portfolio_chg
+    VTSAX_change = VTSAX_weight * ((VTSAX_historical_data[date_index] - VTSAX_historical_data[date_index - 1]) / VTSAX_historical_data[date_index - 1])
+    VTIAX_change = VTIAX_weight * ((VTIAX_historical_data[date_index] - VTIAX_historical_data[date_index - 1]) / VTIAX_historical_data[date_index - 1])
+    VBTLX_change = VBTLX_weight * ((VBTLX_historical_data[date_index] - VBTLX_historical_data[date_index - 1]) / VBTLX_historical_data[date_index - 1])
+    VTABX_change = VTABX_weight * ((VTABX_historical_data[date_index] - VTABX_historical_data[date_index - 1]) / VTABX_historical_data[date_index - 1])
+    VMFFX_change = VMFFX_weight * ((VMFFX_historical_data[date_index] - VMFFX_historical_data[date_index - 1]) / VMFFX_historical_data[date_index - 1])
+    
+    print("\n\nVTSAX Weight: ", VTSAX_weight, " .......... VTSAX % Change: ", round(VTSAX_change * 100, 2))
+    print("\n\nVTIAX Weight: ", VTIAX_weight, " .......... VTIAX % Change: ", round(VTIAX_change * 100, 2))
+    print("\n\nVBTLX Weight: ", VBTLX_weight, " .......... VBTLX % Change: ", round(VBTLX_change * 100, 2))
+    print("\n\nVTABX Weight: ", VTABX_weight, " .......... VTABX % Change: ", round(VTABX_change * 100, 2))
+    print("\n\nVMFFX Weight: ", VMFFX_weight, " .......... VMFFX % Change: ", round(VMFFX_change * 100, 2))
+    
+    # Sum the percent change and return
+    portfolio_chg = VTSAX_change + VTIAX_change + VBTLX_change + VTABX_change + VMFFX_change
+    
+    return portfolio_chg
 
 
 # Functions to assign cash-out and reinvestment dates  
@@ -99,13 +90,34 @@ def iterate_return():
         # TODO: Check that the set weights are working correctly
         # If the date is in the excluded dates range, switch the weights
         if (day in excluded_dates):
-            set_cash_weights()
+            VTSAX_weight = 0
+            VTIAX_weight = 0
+            VBTLX_weight = 0
+            VTABX_weight = 0
+            VMFFX_weight = 0
+            print("\nusing weights:")
+            print(VTSAX_weight)
+            print(VTIAX_weight)
+            print(VBTLX_weight)
+            print(VTABX_weight)
+            print(VMFFX_weight)
+            
         else:
-            set_base_weights()
+            VTSAX_weight = 0.36
+            VTIAX_weight = 0.24
+            VBTLX_weight = 0.28
+            VTABX_weight = 0.12
+            VMFFX_weight = 0.00
+            print("\nusing weights:")
+            print(VTSAX_weight)
+            print(VTIAX_weight) 
+            print(VBTLX_weight) 
+            print(VTABX_weight) 
+            print(VMFFX_weight) 
         
         # Run portfolio_change for each date, excluding date 0
         if (day != 0):
-            day_change = portfolio_change(day)
+            day_change = portfolio_change(day, VTSAX_weight, VTIAX_weight, VBTLX_weight, VTABX_weight, VMFFX_weight)
             
             # Add or subtract that change from the prior day's balance
             balance = round(balance * (1 + day_change), 2)
