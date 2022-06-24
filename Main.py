@@ -73,12 +73,6 @@ def portfolio_change(date_index):
 	return portfolio_chg
 
 
-# Function that will compute the resulting HPR for a portfolio
-def evaluate_HPR(balance_array):
-	"""Takes an array of portfolio balances, and computes HPR"""
-	HPR = (balance_array[-1] - balance_array[0]) / balance_array[0]
-
-	return round(HPR, 2)
 
 # Functions to assign cash-out and reinvestment dates
 def progress_excluded_dates(progression=1):
@@ -86,7 +80,10 @@ def progress_excluded_dates(progression=1):
 	for date in excluded_dates:
 		date += progression 
 	
-
+def evaluate_HPR(balance_array):
+    HPR = (balance_array[-1] - balance_array[0]) / balance_array[0]
+    print("HPR:", HPR)
+    return round(HPR, 4)
 
 # Main Function that will loop through each dataset and compute % change with excluded date ranges
 def iterate_return():
@@ -107,12 +104,15 @@ def iterate_return():
             set_base_weights()
             print("Using base weights")
         
+        print("balance:", balance)
         # Run portfolio_change for each date, excluding date 0
         if (day != 0):
             day_change = portfolio_change(day)
+            print("day_change:", day_change)
             
             # Add or subtract that change from the prior day's balance
-            balance += day_change
+            balance = round(balance * (1 + day_change), 2)
+            print("New balance:", balance)
             
             # Assign the resulting balance to a balance_array
             balance_array.append(balance)
