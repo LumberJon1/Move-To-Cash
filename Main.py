@@ -24,8 +24,6 @@ excluded_dates = []
 for date in range(cash_out_duration):
 	excluded_dates.append(date)
 
-# Define URL format for later if I want to scrape data
-url = "https://finance.yahoo.com/quote/VTSAX/history?period1=1483228800&period2=1655942400&interval=1d&filter=history&frequency=1d&includeAdjustedClose=true"
 
 # Define base weights
 VTSAX_weight = 0.36
