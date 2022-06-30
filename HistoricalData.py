@@ -1,5 +1,5 @@
 import requests
-from bs4 import BeautifulSoup
+import json
 
 # Base URL for the API
 url = "https://yh-finance.p.rapidapi.com/stock/v3/get-historical-data"
@@ -13,9 +13,18 @@ headers = {
 	"X-RapidAPI-Host": "yh-finance.p.rapidapi.com"
 }
 
-response = requests.request("GET", url, headers=headers, params=querystring)
+res = requests.get(url, headers=headers, params=querystring)
 
-print(response.text[:10000])
+# Parse the JSON API response
+data = res.json()
 
-# Parse the data with BeautifulSoup
+
+# Print out the results
+for item in data["prices"]:
+    if "adjclose" in item:
+        print("\n\nItem: ", item, "\n")
+        print("Adjusted Close: ", item["adjclose"])
+    else:
+        print("No price data")
+
 
