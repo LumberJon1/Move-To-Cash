@@ -14,10 +14,10 @@ date_begin = 0
 date_end = 1376
 
 # Organize Data Arrays
-VTSAX_historical_data = HistoricalData.historical_data_VTSAX
-VTIAX_historical_data = HistoricalData.historical_data_VTIAX
-VBTLX_historical_data = HistoricalData.historical_data_VBTLX
-VTABX_historical_data = HistoricalData.historical_data_VTABX
+VTSAX_historical_data = HistoricalData.VTSAX_prices_array
+VTIAX_historical_data = HistoricalData.VTIAX_prices_array
+VBTLX_historical_data = HistoricalData.VBTLX_prices_array
+VTABX_historical_data = HistoricalData.VTABX_prices_array
 VMFXX_historical_data = []
 
 # Fill VMFXX with $1 entries for the length of the other arrays
@@ -121,12 +121,12 @@ cash_out_duration = 90
 # Loop through iterate_return, progressing the excluded dates and appending to iteration_results,
 # as long as exclusion_date doesn't exceed the dataset range
 for iteration in range(len(VTSAX_historical_data) - cash_out_duration):
-    print("\nRunning iteration ", iteration)
     result = iterate_return()
     iteration_results.append(result)
     progress_excluded_dates()
     
-print("\n\nIteration results: ", iteration_results)
+# print("\n\nIteration results: ", iteration_results)
+
 
 # Function to evaluate the percentage of iterations that over- or under-performed the base case
 # where the assets were never pulled out to cash
