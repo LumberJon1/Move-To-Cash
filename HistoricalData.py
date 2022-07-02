@@ -8,6 +8,7 @@ url = "https://yh-finance.p.rapidapi.com/stock/v3/get-chart"
 period1 = "1496275200"
 period2 = "1654041600"
 
+
 # Querystring parameters
 querystring_VTSAX = {"interval":"1d","symbol":"VTSAX","range":"5y","region":"US","includePrePost":"false","useYfid":"true","includeAdjustedClose":"true","events":"capitalGain,div,split", "period1": period1, "period2": period2}
 querystring_VTIAX = {"interval":"1d","symbol":"VTIAX","range":"5y","region":"US","includePrePost":"false","useYfid":"true","includeAdjustedClose":"true","events":"capitalGain,div,split", "period1": period1, "period2": period2}
@@ -84,3 +85,6 @@ fill_array(data_VTIAX, VTIAX_timestamp_array, VTIAX_prices_array, VTIAX_mixed_ar
 fill_array(data_VBTLX, VBTLX_timestamp_array, VBTLX_prices_array, VBTLX_mixed_array)
 fill_array(data_VTABX, VTABX_timestamp_array, VTABX_prices_array, VTABX_mixed_array)
 
+# Dates in readable format for use in main.py
+date1 = convertTime(int(period1))
+date2 = convertTime(int(period2))

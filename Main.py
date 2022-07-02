@@ -113,7 +113,6 @@ def iterate_return():
 cash_out_duration = 0
 base_case_HPR = iterate_return()
 iteration_results.append(base_case_HPR)
-print("Base Case:", iteration_results)
 
 # Reset the cash out duration
 cash_out_duration = 90
@@ -137,8 +136,30 @@ def evaluate_successes():
         if (result > iteration_results[0]):
             count_success += 1
     
+    # Compute statistics for the dataset of iteration results
+    best_performance = 0
+    worst_performance = 1
+    beginning_date = HistoricalData.date1
+    ending_date = HistoricalData.date2
+    
+    for element in iteration_results:
+        if element > best_performance:
+            best_performance = element
+        elif element < worst_performance:
+            worst_performance = element
+        
+        sum_iterations = sum(iteration_results)
+        mean_performance = sum_iterations / len(iteration_results)
+    
+    
     proportion_success = count_success / (len(iteration_results) - 1)
-    print("\n\nProbability of outperforming the market by pulling to cash for "+str(cash_out_duration)+" days:\n")
-    print(str(round(proportion_success * 100, 2))+"%")
+    print("\n------------------------------------------------------------\n")
+    print("Time period analyzed: "+beginning_date+" to "+ending_date)
+    print("Base case HPR:", str((base_case_HPR * 100))+"%")
+    print("\nProbability of outperforming the market by pulling to cash for "+str(cash_out_duration)+" days:")
+    print(str(round(proportion_success * 100, 2))+"%\n")
+    print("Best cash-out scenario return:", str(round((best_performance * 100), 2))+"%")
+    print("Worst cash-out scenario return", str(round((worst_performance * 100), 2))+"%")
+    print("Average cash-out scenario return", str(round(mean_performance * 100, 2))+"%")
 
 evaluate_successes()
