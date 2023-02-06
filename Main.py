@@ -1,4 +1,4 @@
-import HistoricalData
+# import HistoricalData
 
 # Define array to hold output return data
 iteration_results = []
@@ -14,11 +14,11 @@ date_begin = 0
 date_end = 1376
 
 # Organize Data Arrays
-VTSAX_historical_data = HistoricalData.VTSAX_prices_array
-VTIAX_historical_data = HistoricalData.VTIAX_prices_array
-VBTLX_historical_data = HistoricalData.VBTLX_prices_array
-VTABX_historical_data = HistoricalData.VTABX_prices_array
-VMFXX_historical_data = []
+# VTSAX_historical_data = HistoricalData.VTSAX_prices_array
+# VTIAX_historical_data = HistoricalData.VTIAX_prices_array
+# VBTLX_historical_data = HistoricalData.VBTLX_prices_array
+# VTABX_historical_data = HistoricalData.VTABX_prices_array
+# VMFXX_historical_data = []
 
 # Fill VMFXX with $1 entries for the length of the other arrays
 for entry in range(len(VTSAX_historical_data)):
@@ -77,7 +77,6 @@ def iterate_return():
 	# Will need to take a beginning and ending date - for now using length of historical data arrays
     for day in range(len(VTSAX_historical_data)):
         
-        # TODO: Check that the set weights are working correctly
         # If the date is in the excluded dates range, switch the weights
         if (day in excluded_dates):
             VTSAX_weight = 0
@@ -107,6 +106,30 @@ def iterate_return():
     
     # Return HPR result
     return HPR
+          
+
+# Function to generate the base_data chart for data visualization
+def generate_chart_data():
+    balance = beginning_balance
+    balance_array = []
+    
+    VTSAX_weight = 0.36
+    VTIAX_weight = 0.24
+    VBTLX_weight = 0.28
+    VTABX_weight = 0.12
+    VMFXX_weight = 0.00
+    
+    for day in range(len(VTSAX_historical_data)):
+        if (day != 0):
+            day_change = portfolio_change(day, VTSAX_weight, VTIAX_weight, VBTLX_weight, VTABX_weight, VMFXX_weight)
+            
+            # Add or subtract that change from the prior day's balance
+            balance = round(balance * (1 + day_change), 2)
+            
+            # Assign the resulting balance to a balance_array
+            balance_array.append([HistoricalData.convertTime(HistoricalData.VTSAX_timestamp_array[day]), "$"+str(balance)])
+    
+    return balance_array  
 
 
 # Run the baseline comparison for leaving the assets invested without a cash-out period
@@ -162,4 +185,4 @@ def evaluate_successes():
     print("Worst cash-out scenario return", str(round((worst_performance * 100), 2))+"%")
     print("Average cash-out scenario return", str(round(mean_performance * 100, 2))+"%")
 
-evaluate_successes()
+# evaluate_successes()
